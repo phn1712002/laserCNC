@@ -1,0 +1,23 @@
+services:
+  # LaserWeb
+  laserweb:
+    image: joesantos/laserweb:latest
+    container_name: laserweb
+    restart: always
+    privileged: true
+    ports:
+      - "8000:8000"
+    volumes:
+      - /dev/serial:/dev/serial
+      - /dev:/dev
+  # Live WebCam
+  mjpg-streamer:
+    image: patsoffice/mjpg-streamer
+    container_name: mjpg-streamer
+    restart: always
+    devices:
+      - /dev/video0:/dev/video0
+    ports:
+      - "8080:8080"
+    environment:
+      MJPEG_STREAMER_INPUT: "-y -n -r 640x480 -f 15 --rotate 0"
