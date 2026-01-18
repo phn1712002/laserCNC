@@ -31,26 +31,14 @@ services:
       - web
       
   # mjpg-streamer:
-  #   image: mjpg-streamer
-  #   container_name: webcam
-  #   restart: unless-stopped
+  #   restart: always
+  #   image: patsoffice/mjpg-streamer
   #   devices:
-  #     - /dev/video0:/dev/video0
+  #     - /dev/video0
   #   ports:
-  #     - "8081:8080"
-  #   command: >
-  #     sh -c "
-  #     mjpg_streamer
-  #     -i 'input_uvc.so
-  #         -d /dev/video0
-  #         -r 1280x720
-  #         -f 30
-  #         -rot 90
-  #       '
-  #     -o 'output_http.so
-  #         -p 8080
-  #         -w /usr/local/share/mjpg-streamer/www
-  #       '"
+  #     - 8081:8080
+  #   environment:
+  #     - MJPEG_STREAMER_INPUT="-y -n -r 640x480 -f 15 -r 90"
   #   networks:
   #     - web
 
