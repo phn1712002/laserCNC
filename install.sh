@@ -39,7 +39,4 @@ docker compose version || true
 
 echo "🎉 Done! Please log out or reboot to use Docker without sudo."
 apt autoremove
-
-
-echo "=== 6. Startup service ==="
 docker compose down
