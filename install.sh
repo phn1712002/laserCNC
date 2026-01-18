@@ -14,14 +14,15 @@ REAL_USER=${SUDO_USER:-root}
 
 echo "👉 Executing user: $REAL_USER"
 
-echo "=== 1. Updating DietPi system ==="
+echo "=== 1. Updating and installing DietPi system ==="
 dietpi-update
 apt install nano -y
 
 echo "=== 2. Installing Docker (with Docker Compose) via dietpi-software ==="
 # Docker (includes Docker Compose plugin)
 dietpi-software install 162
-
+dietpi-software install 134
+	
 echo "=== 3. Enabling and starting Docker service ==="
 systemctl enable docker
 systemctl start docker
@@ -42,4 +43,3 @@ apt autoremove
 
 echo "=== 6. Startup service ==="
 docker compose down
-docker compose up -d

@@ -1,23 +1,60 @@
 services:
-  # LaserWeb
   laserweb:
-    image: joesantos/laserweb:latest
+    image: mkuf/laserweb:latest
     container_name: laserweb
-    restart: always
+    restart: unless-stopped
     privileged: true
-    ports:
-      - "8000:8000"
-    volumes:
-      - /dev/serial:/dev/serial
-      - /dev:/dev
-  # Live WebCam
-  mjpg-streamer:
-    image: patsoffice/mjpg-streamer
-    container_name: mjpg-streamer
-    restart: always
-    devices:
-      - /dev/video0:/dev/video0
-    ports:
-      - "8080:8080"
     environment:
-      MJPEG_STREAMER_INPUT: "-y -n -r 640x480 -f 15 --rotate 0"
+      - PUID=0
+      - PGID=0
+      - TZ=Asia/Ho_Chi_Minh
+    volumes:
+      - ./config:/config
+      - ./gcode:/gcode
+      - /dev:/dev
+    ports:
+      - "8080:80"  
+    networks:
+      - web
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - laserweb
+    networks:
+      - web
+      
+  # mjpg-streamer:
+  #   image: mjpg-streamer
+  #   container_name: webcam
+  #   restart: unless-stopped
+  #   devices:
+  #     - /dev/video0:/dev/video0
+  #   ports:
+  #     - "8081:8080"
+  #   command: >
+  #     sh -c "
+  #     mjpg_streamer
+  #     -i 'input_uvc.so
+  #         -d /dev/video0
+  #         -r 1280x720
+  #         -f 30
+  #         -rot 90
+  #       '
+  #     -o 'output_http.so
+  #         -p 8080
+  #         -w /usr/local/share/mjpg-streamer/www
+  #       '"
+  #   networks:
+  #     - web
+
+
+networks:
+  web:
+    driver: bridge
