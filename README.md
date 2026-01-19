@@ -10,6 +10,8 @@ This project provides a complete Laser CNC control system using Docker, includin
 - **LaserWeb**: Web-based interface to control the Laser CNC machine
 - **Nginx**: Reverse proxy for web interface access
 
+![LaserCNC Old](./.images/laserCNC_old.png)
+
 The system is designed to run on DietPi (Raspberry Pi) and provides easy access through a web browser.
 
 ## 🚀 Key Features
@@ -159,7 +161,6 @@ Thanks to the open-source projects:
 * [mjpg-streamer](https://github.com/jacksonliam/mjpg-streamer) – Webcam video streaming
 * [Nginx](https://nginx.org/) – Web server and reverse proxy
 * [Docker](https://www.docker.com/) – Container platform
-* 
 * [DietPi OS](https://github.com/MichaIng/DietPi) – Lightweight justice for your single-board computer
 ---
 
