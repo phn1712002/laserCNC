@@ -11,6 +11,7 @@ This project provides a complete Laser CNC control system using Docker, includin
 - **Nginx**: Reverse proxy for web interface access
 
 ![LaserCNC Old](./.images/laserCNC_old.png)
+![Board newnew](./.images/new_board.png)
 
 The system is designed to run on DietPi (Raspberry Pi) and provides easy access through a web browser.
 
