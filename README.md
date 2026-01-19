@@ -23,7 +23,7 @@ The system is designed to run on DietPi (Raspberry Pi) and provides easy access 
 
 ## 🛠️ System Requirements
 
-- **Operating System**: DietPi (recommended) or other Debian-based Linux distributions
+- **Operating System**: DietPi (recommended)
 - **Docker**: Latest version
 - **Docker Compose**: Latest version
 - **Hardware**:
@@ -145,6 +145,7 @@ Once enabled:
 * [Docker Documentation](https://docs.docker.com/) – Docker official docs
 * [Nginx Documentation](https://nginx.org/en/docs/) – Nginx configuration
 * [GRBL GitHub](https://github.com/gnea/grbl) – GRBL firmware for CNC
+* [DietPi OS](https://github.com/MichaIng/DietPi) – Lightweight justice for your single-board computer
 
 ## 📄 License
 
@@ -158,7 +159,8 @@ Thanks to the open-source projects:
 * [mjpg-streamer](https://github.com/jacksonliam/mjpg-streamer) – Webcam video streaming
 * [Nginx](https://nginx.org/) – Web server and reverse proxy
 * [Docker](https://www.docker.com/) – Container platform
-
+* 
+* [DietPi OS](https://github.com/MichaIng/DietPi) – Lightweight justice for your single-board computer
 ---
 
-**🔄 Last update**: 18/01/2026
+**🔄 Last update**: 19/01/2026
