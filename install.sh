@@ -37,6 +37,9 @@ echo "=== 5. Verifying installation ==="
 docker --version
 docker compose version || true
 
-echo "🎉 Done! Please log out or reboot to use Docker without sudo."
+echo "=== 6. Installation images ==="
 apt autoremove
+docker compose pull
 docker compose down
+
+echo "🎉 Done! Please log out or reboot to use Docker without sudo."
