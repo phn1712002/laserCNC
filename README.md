@@ -72,6 +72,8 @@ The system is optimized for DietPi (Raspberry Pi) and provides **easy remote acc
 
 ## 📦 Installation
 
+### 1. Installation the services
+
 ```bash
 # Grant execute permission
 chmod +x install.sh
