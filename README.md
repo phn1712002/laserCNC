@@ -34,37 +34,13 @@ The system is optimized for DietPi (Raspberry Pi) and provides **easy remote acc
 ### Prerequisites for Remote Operation
 - **WiFi Network**: Stable wireless network for Raspberry Pi connectivity
 - **Router Access**: For configuring port forwarding (optional, for external access)
-- **Static IP** (recommended): Assign fixed IP to your Raspberry Pi for consistent access
-
-### Step-by-Step WiFi Configuration
-
-#### 1. **Connect Raspberry Pi to WiFi**
+- **Connect Raspberry Pi to WiFi**:
    ```bash
    # Edit WiFi configuration on DietPi
    sudo dietpi-config
    ```
    Navigate to: **Network Options → WiFi** and connect to your network.
 
-#### 2. **Set Static IP (Recommended)**
-   ```bash
-   # Edit network configuration
-   sudo nano /etc/dhcpcd.conf
-   ```
-   Add at the end:
-   ```bash
-   interface wlan0
-   static ip_address=192.168.1.100/24
-   static routers=192.168.1.1
-   static domain_name_servers=192.168.1.1 8.8.8.8
-   ```
-   Replace `192.168.1.100` with your desired IP and `192.168.1.1` with your router IP.
-
-#### 3. **Find Your Raspberry Pi IP**
-   ```bash
-   hostname -I
-   # or
-   ip addr show wlan0
-   ```
 
 ### Remote Access Methods
 
@@ -179,52 +155,6 @@ Modify the command parameters in the mjpg-streamer service:
 Once enabled:
 * **Direct access**: `http://[RASPBERRY-PI-IP]:8081`
 * **Via Nginx**: `http://[RASPBERRY-PI-IP]/cam/` (if proxy configured)
-
-## 🔧 Troubleshooting
-
-### 1. Cannot access LaserWeb remotely over WiFi
-
-* **Check WiFi connection**: `ping [RASPBERRY-PI-IP]` from another device
-* **Verify firewall**: `sudo ufw status` (ensure ports 80, 8080 are open)
-* **Check service status**: `docker compose ps`
-* **Test local access**: Try accessing from the Raspberry Pi itself: `curl http://localhost`
-
-### 2. LaserWeb cannot connect to the controller board
-
-* **Check USB connection**: `ls /dev/tty*`
-* **Check permissions**: `sudo chmod 666 /dev/ttyUSB0` (or `/dev/ttyACM0`, `/dev/ttyS0`, etc.)
-* **Restart container**: `docker compose restart laserweb`
-
-### 3. WiFi connection issues
-
-* **Check WiFi signal**: `iwconfig wlan0`
-* **Reconnect WiFi**: `sudo dhclient -r wlan0 && sudo dhclient wlan0`
-* **Check DHCP lease**: `cat /var/lib/dhcp/dhclient.leases`
-
-### 4. Services not starting
-
-* **Check Docker status**: `systemctl status docker`
-* **Check container logs**: `docker compose logs`
-* **Verify docker-compose.yaml syntax**: `docker compose config`
-
-### 5. Webcam not working (if enabled)
-
-* **Check webcam device**: `ls /dev/video*`
-* **Test webcam**: `ffplay /dev/video0` (install ffmpeg if needed)
-* **Change device path in docker-compose.yaml**
-* **Check mjpg-streamer logs**: `docker compose logs webcam`
-
-## 🔒 Security Considerations for Remote Access
-
-1. **Change default passwords** in LaserWeb configuration
-2. **Use HTTPS** for external access (consider adding SSL certificate)
-3. **Implement firewall rules** to restrict access:
-   ```bash
-   sudo ufw allow from 192.168.1.0/24 to any port 80
-   sudo ufw allow from 192.168.1.0/24 to any port 8080
-   ```
-4. **Consider VPN** for secure external access instead of port forwarding
-5. **Regular updates**: Keep DietPi, Docker, and containers updated
 
 ## 📚 References
 
