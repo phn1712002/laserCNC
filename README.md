@@ -184,4 +184,3 @@ Thanks to the open-source projects:
 ---
 
 **🔄 Last update**: 19/01/2026
-**✨ Focus**: Enhanced WiFi connectivity and remote control capabilities
