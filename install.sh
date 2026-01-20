@@ -16,12 +16,14 @@ echo "👉 Executing user: $REAL_USER"
 
 echo "=== 1. Updating and installing DietPi system ==="
 dietpi-update
+dietpi-software install 17
 apt install nano -y
 
 echo "=== 2. Installing Docker (with Docker Compose) via dietpi-software ==="
 # Docker (includes Docker Compose plugin)
 dietpi-software install 162
 dietpi-software install 134
+
 	
 echo "=== 3. Enabling and starting Docker service ==="
 systemctl enable docker
@@ -41,5 +43,6 @@ echo "=== 6. Installation images ==="
 apt autoremove
 docker compose pull
 docker compose down
+git clone https://github.com/phn1712002/LCD_HostName_IP_Display IPLaserCNC
 
 echo "🎉 Done! Please log out or reboot to use Docker without sudo."
