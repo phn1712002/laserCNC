@@ -45,4 +45,7 @@ docker compose pull
 docker compose down
 git clone https://github.com/phn1712002/LCD_HostName_IP_Display IPLaserCNC
 
+echo "=== 7. Installation Tailscale ==="
+curl -fsSL https://tailscale.com/install.sh | sh
+
 echo "🎉 Done! Please log out or reboot to use Docker without sudo."

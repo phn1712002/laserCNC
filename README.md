@@ -1,7 +1,6 @@
    # LaserCNC Project – Laser CNC Control System with Docker
 
    ![LaserCNC](https://img.shields.io/badge/Laser-CNC-blue)
-   ![Docker](https://img.shields.io/badge/Docker-Container-green)
    ![Nginx](https://img.shields.io/badge/Nginx-Proxy-brightgreen)
    ![WiFi](https://img.shields.io/badge/WiFi-Remote_Access-orange)
    ![Remote Control](https://img.shields.io/badge/Remote-Control-yellow)
@@ -176,90 +175,7 @@
    * **Direct access**: `http://[RASPBERRY-PI-IP]:8081`
    * **Via Nginx**: `http://[RASPBERRY-PI-IP]/cam/` (if proxy configured)
 
-   ## 🔒 Tailscale Secure Remote Access (Recommended)
-
-   For secure remote access without port forwarding or complex network configuration, this project now includes **Tailscale** integration. Tailscale creates a secure VPN mesh network using WireGuard, allowing you to access your LaserCNC from anywhere securely.
-
-   ### Benefits of Tailscale Integration
-   - ✅ **Zero-config VPN** - No port forwarding or router configuration needed
-   - ✅ **End-to-end encryption** - All traffic is encrypted with WireGuard
-   - ✅ **Access from anywhere** - Connect from any device with Tailscale installed
-   - ✅ **No public IP required** - Works behind NAT and firewalls
-   - ✅ **Easy device management** - Manage access through Tailscale admin console
-
-   ### Setting Up Tailscale
-
-   1. **Get a Tailscale Auth Key**:
-      - Go to [Tailscale Admin Console](https://login.tailscale.com/admin/settings/keys)
-      - Click "Generate auth key"
-      - Copy the key (starts with `tskey-auth-`)
-
-   2. **Configure Tailscale**:
-      ```bash
-      # Edit the .env file
-      nano .env
-      
-      # Set your Tailscale auth key
-      TS_AUTHKEY=tskey-auth-your-key-here
-      ```
-
-   3. **Run Tailscale Setup Script**:
-      ```bash
-      # Make the setup script executable
-      chmod +x tailscale-setup.sh
-      
-      # Run the setup script
-      ./tailscale-setup.sh
-      ```
-
-   4. **Verify Connection**:
-      - Check your [Tailscale Admin Console](https://login.tailscale.com/admin/machines)
-      - You should see a device named `laser-cnc-*`
-      - The device should show as connected
-
-   ### Accessing Services via Tailscale
-
-   Once Tailscale is running, you can access your LaserCNC services securely:
-
-   - **LaserWeb via Nginx**: `http://laser-cnc-*.tailscale-name` (port 80)
-   - **Direct LaserWeb**: `http://laser-cnc-*.tailscale-name:8080`
-   - **Webcam Stream**: `http://laser-cnc-*.tailscale-name:8081` (if enabled)
-
-   ### Managing Tailscale
-
-   ```bash
-   # Start Tailscale only
-   docker compose up -d tailscale
-   
-   # Start all services with Tailscale
-   docker compose up -d
-   
-   # Stop Tailscale
-   docker compose stop tailscale
-   
-   # View Tailscale logs
-   docker logs tailscale
-   
-   # Check Tailscale status
-   docker exec tailscale tailscale status
-   ```
-
-   ### Advanced Tailscale Configuration
-
-   You can customize Tailscale behavior by editing the `.env` file:
-
-   ```bash
-   # Custom hostname
-   TS_HOSTNAME=laser-cnc-raspberrypi
-   
-   # Advertise as exit node (allow routing traffic through this device)
-   TS_EXTRA_ARGS=--advertise-exit-node
-   
-   # Add tags for access control
-   TS_EXTRA_ARGS=--advertise-tags=tag:laser-cnc
-   ```
-
-   ## 📚 References
+   ## � References
 
    * [LaserWeb GitHub](https://github.com/LaserWeb/LaserWeb4) – LaserWeb documentation
    * [mjpg-streamer GitHub](https://github.com/jacksonliam/mjpg-streamer) – mjpg-streamer documentation
@@ -268,7 +184,6 @@
    * [GRBL GitHub](https://github.com/gnea/grbl) – GRBL firmware for CNC
    * [DietPi OS](https://github.com/MichaIng/DietPi) – Lightweight justice for your single-board computer
    * [Raspberry Pi WiFi Configuration](https://www.raspberrypi.com/documentation/computers/configuration.html#wireless-networking) – Official WiFi setup guide
-   * [Tailscale Documentation](https://tailscale.com/kb/) – Tailscale setup and configuration
 
    ## 📄 License
 
@@ -285,4 +200,4 @@
    * [DietPi OS](https://github.com/MichaIng/DietPi) – Lightweight justice for your single-board computer
    ---
 
-   **🔄 Last update**: 21/01/2026 (Added Tailscale integration for secure remote access)
+   **🔄 Last update**: 21/01/2026
