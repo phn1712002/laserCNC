@@ -17,54 +17,41 @@ services:
     networks:
       - web
 
-  nginx:
-    image: nginx:latest
-    container_name: nginx
-    restart: unless-stopped
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
-    depends_on:
-      - laserweb
-    networks:
-      - web
+  # lcd-display:
+  #   build: ./IPLaserCNC
+  #   container_name: lcd-hostname-ip
+  #   restart: unless-stopped
+  #   privileged: true
 
-  lcd-display:
-    build: ./IPLaserCNC
-    container_name: lcd-hostname-ip
-    restart: unless-stopped
-    privileged: true
-
-    # I2C
-    devices:
-      - "/dev/i2c-1:/dev/i2c-1"
+  #   # I2C
+  #   devices:
+  #     - "/dev/i2c-1:/dev/i2c-1"
   
-    # Use host network to get host's IP address
-    network_mode: "host"
+  #   # Use host network to get host's IP address
+  #   network_mode: "host"
     
-    # Environment variables
-    environment:
-      - CONFIG_FILE=/app/config_board.yaml
+  #   # Environment variables
+  #   environment:
+  #     - CONFIG_FILE=/app/config_board.yaml
     
-    # Health check
-    healthcheck:
-      test: ["CMD", "python", "-c", "import socket; socket.gethostname()"]
-      interval: 30s
-      timeout: 3s
-      retries: 3
-      start_period: 5s
+  #   # Health check
+  #   healthcheck:
+  #     test: ["CMD", "python", "-c", "import socket; socket.gethostname()"]
+  #     interval: 30s
+  #     timeout: 3s
+  #     retries: 3
+  #     start_period: 5s
     
-    # Logging configuration
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
+  #   # Logging configuration
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "3"
     
-    # Keep container running
-    tty: true
-    stdin_open: true
+  #   # Keep container running
+  #   tty: true
+  #   stdin_open: true
 
   tailscale:
     image: tailscale/tailscale:latest
