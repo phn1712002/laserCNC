@@ -90,7 +90,25 @@
    4. Start the Docker service
    5. Stop any existing containers (clean start)
 
-   ### 2. Start the services
+   ### 2. Check and Build Docker Images (Optional - for ARM architectures)
+
+   For Raspberry Pi (ARM architecture), some Docker images may not be available. Use the `check-and-build.sh` script to automatically check and build images from source if needed:
+
+   ```bash
+   # Grant execute permission
+   chmod +x check-and-build.sh
+
+   # Run the check and build script
+   ./check-and-build.sh
+   ```
+
+   This script will:
+   1. Detect your system architecture (ARM, ARM64, AMD64)
+   2. Check each Docker image in `images.conf` for availability
+   3. Pull the image if available for your architecture
+   4. Build from source if the image doesn't exist or doesn't support your architecture
+
+   ### 3. Start the services
 
    After installation, start the services with:
 
@@ -98,7 +116,7 @@
    docker compose up -d
    ```
 
-   ### 3. Access the interfaces remotely
+   ### 4. Access the interfaces remotely
 
    Once your Raspberry Pi is connected to WiFi:
 
@@ -106,7 +124,7 @@
    * **LaserWeb direct**: `http://[RASPBERRY-PI-IP]:8080` (port 8080)
    * **Webcam Stream**: Not enabled by default (see configuration section below)
 
-   ### 4. Connection Configuration
+   ### 5. Connection Configuration
 
    1. **Connect the Laser CNC controller board**:
 
@@ -183,4 +201,4 @@
    * [DietPi OS](https://github.com/MichaIng/DietPi) – Lightweight justice for your single-board computer
    ---
 
-   **🔄 Last update**: 19/01/2026
+   **🔄 Last update**: 20/01/2026
