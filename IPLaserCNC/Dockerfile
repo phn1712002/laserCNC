@@ -26,6 +26,9 @@ COPY . .
 # Copy LCD library
 COPY lib/LCD-1602-I2C ./lib/LCD-1602-I2C
 
+# Copy default board configuration
+COPY config_board.yaml .
+
 # Create non-root user for security
 RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
 USER appuser

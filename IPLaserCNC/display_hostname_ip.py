@@ -2,13 +2,24 @@
 """
 Display Hostname and IP on LCD 16x2 via I2C
 This script reads system hostname and IP address, then displays them on LCD.
+Supports configuration via YAML file and environment variables.
 """
 
 import socket
 import time
 import sys
 import os
-from typing import Optional, List
+import argparse
+from typing import Optional, List, Dict, Any
+
+# Try to import YAML library
+try:
+    import yaml
+    YAML_AVAILABLE = True
+except ImportError:
+    YAML_AVAILABLE = False
+    print("Warning: PyYAML not installed. YAML config files will not be supported.")
+    print("Install with: pip install pyyaml")
 
 # Try to import LCD library
 try:
@@ -189,6 +200,76 @@ def format_for_lcd(hostname: str, ip: str) -> tuple:
     return hostname_display, ip_display
 
 
+def load_yaml_config(config_file: str) -> Dict[str, Any]:
+    """
+    Load configuration from YAML file.
+    
+    Args:
+        config_file: Path to YAML configuration file
+        
+    Returns:
+        Dictionary with configuration values
+        
+    Raises:
+        FileNotFoundError: If config file doesn't exist
+        yaml.YAMLError: If YAML parsing fails
+    """
+    if not YAML_AVAILABLE:
+        raise ImportError("PyYAML is not installed. Cannot load YAML config.")
+    
+    with open(config_file, 'r', encoding='utf-8') as f:
+        config_data = yaml.safe_load(f)
+    
+    # Extract active configuration
+    if 'active_configuration' in config_data:
+        active_config = config_data['active_configuration']
+    else:
+        # Fallback to first configuration found
+        for key, value in config_data.items():
+            if isinstance(value, dict) and 'board_name' in value:
+                active_config = value
+                print(f"Using configuration: {key}")
+                break
+        else:
+            raise ValueError("No valid configuration found in YAML file")
+    
+    # Map YAML structure to our config format
+    config = {
+        'i2c_addr': 0x3F,
+        'pi_rev': 2,
+        'backlight': True,
+        'update_interval': 60,
+        'board_name': 'Unknown',
+        'config_source': f'YAML file: {config_file}'
+    }
+    
+    # Extract values from YAML
+    if 'board_name' in active_config:
+        config['board_name'] = active_config['board_name']
+    
+    if 'i2c' in active_config:
+        i2c_config = active_config['i2c']
+        if 'address' in i2c_config:
+            config['i2c_addr'] = i2c_config['address']
+    
+    if 'lcd' in active_config:
+        lcd_config = active_config['lcd']
+        if 'backlight' in lcd_config:
+            config['backlight'] = lcd_config['backlight']
+    
+    if 'raspberry_pi' in active_config:
+        pi_config = active_config['raspberry_pi']
+        if 'revision' in pi_config:
+            config['pi_rev'] = pi_config['revision']
+    
+    if 'settings' in active_config:
+        settings = active_config['settings']
+        if 'update_interval' in settings:
+            config['update_interval'] = settings['update_interval']
+    
+    return config
+
+
 def get_env_config():
     """
     Get configuration from environment variables.
@@ -202,7 +283,9 @@ def get_env_config():
         'i2c_addr': 0x3F,
         'pi_rev': 2,
         'backlight': True,
-        'update_interval': 60
+        'update_interval': 60,
+        'board_name': 'Environment Variables',
+        'config_source': 'Environment variables'
     }
     
     # Read I2C address
@@ -247,19 +330,104 @@ def get_env_config():
     return config
 
 
+def get_config(config_file: str = None) -> Dict[str, Any]:
+    """
+    Get configuration from YAML file or environment variables.
+    YAML file takes precedence if provided.
+    
+    Args:
+        config_file: Optional path to YAML configuration file
+        
+    Returns:
+        Dictionary with configuration values
+    """
+    config = None
+    
+    # Try to load from YAML file first
+    if config_file:
+        try:
+            if YAML_AVAILABLE:
+                config = load_yaml_config(config_file)
+                print(f"Configuration loaded from: {config_file}")
+            else:
+                print(f"Warning: Cannot load YAML config. PyYAML not installed.")
+                print(f"Using environment variables instead.")
+        except FileNotFoundError:
+            print(f"Warning: Config file not found: {config_file}")
+            print(f"Using environment variables instead.")
+        except Exception as e:
+            print(f"Warning: Error loading config file: {e}")
+            print(f"Using environment variables instead.")
+    
+    # Fall back to environment variables
+    if config is None:
+        config = get_env_config()
+    
+    return config
+
+
 def main():
     """Main function."""
-    print("Hostname and IP Display for Raspberry Pi")
-    print("=" * 40)
+    # Parse command line arguments
+    parser = argparse.ArgumentParser(
+        description='Display hostname and IP on LCD 16x2 via I2C'
+    )
+    parser.add_argument(
+        '--config', '-c',
+        type=str,
+        help='Path to YAML configuration file (e.g., config_board.yaml)'
+    )
+    parser.add_argument(
+        '--list-boards', '-l',
+        action='store_true',
+        help='List available board configurations and exit'
+    )
     
-    # Get configuration from environment
-    config = get_env_config()
-    print(f"Configuration:")
+    args = parser.parse_args()
+    
+    # List boards if requested
+    if args.list_boards:
+        print("Available board configurations in config_board.yaml:")
+        print("=" * 60)
+        print("1. Raspberry Pi 3 Model B (Pi3B)")
+        print("   - I2C bus: 1")
+        print("   - I2C device: /dev/i2c-1")
+        print("   - Pi revision: 2")
+        print()
+        print("2. Raspberry Pi 3 Model B+ (Pi3B+)")
+        print("   - I2C bus: 1")
+        print("   - I2C device: /dev/i2c-1")
+        print("   - Pi revision: 2")
+        print()
+        print("3. Orange Pi Zero 3")
+        print("   - I2C bus: 1 (usually)")
+        print("   - I2C device: /dev/i2c-1")
+        print("   - Pi revision: 2 (for compatibility)")
+        print()
+        print("4. Raspberry Pi 4")
+        print("   - I2C bus: 1")
+        print("   - I2C device: /dev/i2c-1")
+        print("   - Pi revision: 2")
+        print()
+        print("Usage:")
+        print("  python display_hostname_ip.py --config config_board.yaml")
+        print("  python display_hostname_ip.py (uses environment variables)")
+        return
+    
+    print("Hostname and IP Display for Raspberry Pi and compatible boards")
+    print("=" * 60)
+    
+    # Get configuration
+    config = get_config(args.config)
+    
+    print(f"Configuration Source: {config.get('config_source', 'Unknown')}")
+    if 'board_name' in config:
+        print(f"Board: {config['board_name']}")
     print(f"  I2C Address: 0x{config['i2c_addr']:02X}")
     print(f"  Pi Revision: {config['pi_rev']}")
     print(f"  Backlight: {config['backlight']}")
     print(f"  Update Interval: {config['update_interval']} seconds")
-    print("=" * 40)
+    print("=" * 60)
     
     # Initialize LCD with config
     lcd = LCDDisplay(

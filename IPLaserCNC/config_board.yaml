@@ -1,0 +1,206 @@
+# Board configuration file for IPLaserCNC project
+# This file is used to configure parameters for different board types
+# Edit this file according to the board you are using, then run the script with the appropriate configuration
+
+# ============================================================================
+# USAGE INSTRUCTIONS:
+# 1. Select the board you are using (Pi3B, Pi3B+, Orange Pi Zero 3, etc.)
+# 2. Copy the entire section of that board (from "pi3b_config:" to the end of the section)
+# 3. Paste it into the "active_configuration" section at the end of this file (replace existing content)
+# 4. Modify parameters if needed (I2C address, backlight, etc.)
+# 5. Save the file and run the script with:
+#    python display_hostname_ip.py --config config_board.yaml
+# ============================================================================
+
+# ----------------------------------------------------------------------------
+# CONFIGURATION FOR RASPBERRY PI 3 MODEL B (Pi3B)
+# ----------------------------------------------------------------------------
+pi3b_config:
+  # Board name
+  board_name: "Raspberry Pi 3 Model B"
+  
+  # I2C information
+  i2c:
+    # I2C address of the LCD (commonly 0x3F or 0x27)
+    # Use the command `sudo i2cdetect -y 1` to detect the address
+    address: 0x3F
+    
+    # I2C bus (1 for Raspberry Pi 2/3/4)
+    bus: 1
+    
+    # I2C device path
+    device: "/dev/i2c-1"
+  
+  # LCD information
+  lcd:
+    # Enable/disable LCD backlight
+    backlight: true
+    
+    # Number of LCD lines (usually 2)
+    lines: 2
+    
+    # Characters per line (usually 16)
+    chars_per_line: 16
+  
+  # Raspberry Pi information
+  raspberry_pi:
+    # Pi revision (2 for Pi 2/3/4)
+    revision: 2
+    
+    # Specific model
+    model: "Pi 3 Model B"
+  
+  # General settings
+  settings:
+    # IP update interval (seconds)
+    update_interval: 60
+    
+    # Show hostname on line 1
+    show_hostname: true
+    
+    # Show IP on line 2
+    show_ip: true
+    
+    # Automatically refresh IP when it changes
+    auto_refresh_ip: true
+
+# ----------------------------------------------------------------------------
+# CONFIGURATION FOR RASPBERRY PI 3 MODEL B+ (Pi3B+)
+# ----------------------------------------------------------------------------
+pi3b_plus_config:
+  # Board name
+  board_name: "Raspberry Pi 3 Model B+"
+  
+  # I2C information
+  i2c:
+    # I2C address of the LCD (commonly 0x3F or 0x27)
+    # Use the command `sudo i2cdetect -y 1` to detect the address
+    address: 0x3F
+    
+    # I2C bus (1 for Raspberry Pi 2/3/4)
+    bus: 1
+    
+    # I2C device path
+    device: "/dev/i2c-1"
+  
+  # LCD information
+  lcd:
+    # Enable/disable LCD backlight
+    backlight: true
+    
+    # Number of LCD lines (usually 2)
+    lines: 2
+    
+    # Characters per line (usually 16)
+    chars_per_line: 16
+  
+  # Raspberry Pi information
+  raspberry_pi:
+    # Pi revision (2 for Pi 2/3/4)
+    revision: 2
+    
+    # Specific model
+    model: "Pi 3 Model B+"
+  
+  # General settings
+  settings:
+    # IP update interval (seconds)
+    update_interval: 60
+    
+    # Show hostname on line 1
+    show_hostname: true
+    
+    # Show IP on line 2
+    show_ip: true
+    
+    # Automatically refresh IP when it changes
+    auto_refresh_ip: true
+
+# ----------------------------------------------------------------------------
+# CONFIGURATION FOR ORANGE PI ZERO 3
+# ----------------------------------------------------------------------------
+orange_pi_zero_3_config:
+  # Board name
+  board_name: "Orange Pi Zero 3"
+  
+  # I2C information
+  i2c:
+    # I2C address of the LCD (commonly 0x3F or 0x27)
+    # Use the command `sudo i2cdetect -y 1` to detect the address
+    # Note: Orange Pi may require installing i2c-tools first
+    address: 0x3F
+    
+    # I2C bus (usually 1 for Orange Pi Zero 3)
+    bus: 1
+    
+    # I2C device path (may be /dev/i2c-0 or /dev/i2c-1)
+    device: "/dev/i2c-1"
+  
+  # LCD information
+  lcd:
+    # Enable/disable LCD backlight
+    backlight: true
+    
+    # Number of LCD lines (usually 2)
+    lines: 2
+    
+    # Characters per line (usually 16)
+    chars_per_line: 16
+  
+  # Orange Pi information
+  orange_pi:
+    # Specific model
+    model: "Zero 3"
+    
+    # Note: Orange Pi uses smbus.SMBus(1) similar to Raspberry Pi 2/3/4
+    # Required package:
+    # sudo apt-get install python3-smbus
+    
+  # General settings
+  settings:
+    # IP update interval (seconds)
+    update_interval: 60
+    
+    # Show hostname on line 1
+    show_hostname: true
+    
+    # Show IP on line 2
+    show_ip: true
+    
+    # Automatically refresh IP when it changes
+    auto_refresh_ip: true
+
+# ============================================================================
+# ACTIVE CONFIGURATION
+# ============================================================================
+# COPY THE ENTIRE SECTION OF THE BOARD YOU ARE USING AND PASTE IT HERE
+# Example: if using Pi3B+, copy from "pi3b_plus_config:" to the end of that section
+# and paste it below, replacing the current content
+
+active_configuration:
+  # Example for Pi3B+ (copied from pi3b_plus_config above):
+  board_name: "Raspberry Pi 3 Model B+"
+  i2c:
+    address: 0x3F
+    bus: 1
+    device: "/dev/i2c-1"
+  lcd:
+    backlight: true
+    lines: 2
+    chars_per_line: 16
+  raspberry_pi:
+    revision: 2
+    model: "Pi 3 Model B+"
+  settings:
+    update_interval: 60
+    show_hostname: true
+    show_ip: true
+    auto_refresh_ip: true
+
+# ============================================================================
+# IMPORTANT NOTES:
+# 1. Always run `sudo i2cdetect -y 1` (or `-y 0` for Pi 1) to check the I2C address
+# 2. Make sure I2C is enabled in raspi-config
+# 3. For Orange Pi, install i2c-tools and python3-smbus
+# 4. If the LCD does not display anything, check the I2C address and physical wiring
+# ============================================================================
