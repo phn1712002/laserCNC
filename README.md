@@ -45,8 +45,8 @@
 
    #### **Local Network Access**
    - **Via Nginx**: `http://[RASPBERRY-PI-IP]` (port 80)
-   - **Direct LaserWeb**: `http://[RASPBERRY-PI-IP]:8080` (port 8080)
-   - **Webcam Stream**: `http://[RASPBERRY-PI-IP]:8081` (if enabled)
+   - **Direct LaserWeb**: `http://[RASPBERRY-PI-IP]:8081` (port 8081)
+   - **Webcam Stream**: `http://[RASPBERRY-PI-IP]:8082` (if enabled)
 
    #### **External Network Access (Advanced)**
    1. **Configure Port Forwarding** on your router:
