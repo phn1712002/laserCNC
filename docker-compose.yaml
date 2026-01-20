@@ -45,12 +45,7 @@ services:
     
     # Environment variables
     environment:
-      - LCD_I2C_ADDR=0x3F
-      - LCD_PI_REV=2
-      - LCD_BACKLIGHT=true
-      - UPDATE_INTERVAL=60
-      # Optional: Use YAML config file instead of environment variables
-      # - CONFIG_FILE=/app/config_board.yaml
+      - CONFIG_FILE=/app/config_board.yaml
     
     # Health check
     healthcheck:
