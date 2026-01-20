@@ -35,11 +35,11 @@ services:
     container_name: lcd-hostname-ip
     restart: unless-stopped
     privileged: true
+
+    # I2C
     devices:
       - "/dev/i2c-1:/dev/i2c-1"
-    # For Raspberry Pi 1, use /dev/i2c-0 instead:
-    # - "/dev/i2c-0:/dev/i2c-0"
-    
+  
     # Use host network to get host's IP address
     network_mode: "host"
     
@@ -49,6 +49,8 @@ services:
       - LCD_PI_REV=2
       - LCD_BACKLIGHT=true
       - UPDATE_INTERVAL=60
+      # Optional: Use YAML config file instead of environment variables
+      # - CONFIG_FILE=/app/config_board.yaml
     
     # Health check
     healthcheck:
