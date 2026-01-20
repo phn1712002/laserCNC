@@ -105,28 +105,47 @@ def get_ip_addresses() -> List[str]:
         List of IP addresses
     """
     ips = []
+    
+    # Method 1: Get IPs from network interfaces using socket.getaddrinfo
     try:
-        # Get all network interfaces
         hostname = socket.gethostname()
         addrinfo = socket.getaddrinfo(hostname, None)
         
         for addr in addrinfo:
             ip = addr[4][0]
-            # Filter out localhost and IPv6 link-local
-            if ip != '127.0.0.1' and not ip.startswith('fe80:'):
+            # Filter out localhost addresses (127.x.x.x) and IPv6 link-local
+            if not ip.startswith('127.') and not ip.startswith('fe80:'):
                 ips.append(ip)
     except:
         pass
     
-    # If no IPs found, try socket connection method
+    # Method 2: Get IPs from all network interfaces using socket.gethostbyname_ex
+    try:
+        # Get all IPs associated with the hostname
+        _, _, ip_list = socket.gethostbyname_ex(socket.gethostname())
+        for ip in ip_list:
+            # Filter out localhost addresses (127.x.x.x)
+            if not ip.startswith('127.'):
+                if ip not in ips:  # Avoid duplicates
+                    ips.append(ip)
+    except:
+        pass
+    
+    # Method 3: Get outgoing IP by connecting to external server
     if not ips:
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             s.connect(("8.8.8.8", 80))
-            ips.append(s.getsockname()[0])
+            outgoing_ip = s.getsockname()[0]
             s.close()
+            if outgoing_ip and not outgoing_ip.startswith('127.'):
+                ips.append(outgoing_ip)
         except:
-            ips.append("No IP")
+            pass
+    
+    # If still no IPs found, return "No IP"
+    if not ips:
+        ips.append("No IP")
     
     return ips
 
@@ -261,12 +280,12 @@ def main():
     hostname_display, ip_display = format_for_lcd(hostname, ip)
     
     # Display on LCD
-    lcd.message(f"{hostname_display[:11]}", 1)
-    lcd.message(f"{ip_display[:13]}", 2)
+    lcd.message(f"{hostname_display[:16]}", 1)
+    lcd.message(f"{ip_display[:16]}", 2)
     
     print(f"Displaying on LCD:")
-    print(f"Line 1: Host: {hostname_display[:11]}")
-    print(f"Line 2: IP: {ip_display[:13]}")
+    print(f"Line 1: {hostname_display[:16]}")
+    print(f"Line 2: {ip_display[:16]}")
     
     # Keep running to maintain display
     try:
@@ -279,7 +298,7 @@ def main():
             if new_ip != ip:
                 ip = new_ip
                 ip_display = ip[:16].ljust(16)
-                lcd.message(f"{ip_display[:13]}", 2)
+                lcd.message(f"{ip_display[:16]}", 2)
                 print(f"IP updated: {ip}")
     except KeyboardInterrupt:
         print("\nExiting...")

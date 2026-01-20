@@ -43,6 +43,10 @@ services:
     # Use host network to get host's IP address
     network_mode: "host"
     
+    #  Mount host's network info to get host IP
+    volumes:
+      - /proc/net:/proc/net:ro
+    
     # Environment variables
     environment:
       - LCD_I2C_ADDR=0x3F
