@@ -29,6 +29,45 @@ services:
       - laserweb
     networks:
       - web
+
+  lcd-display:
+    build: ./IPLaserCNC
+    container_name: lcd-hostname-ip
+    restart: unless-stopped
+    privileged: true
+    devices:
+      - "/dev/i2c-1:/dev/i2c-1"
+    # For Raspberry Pi 1, use /dev/i2c-0 instead:
+    # - "/dev/i2c-0:/dev/i2c-0"
+    
+    # Use host network to get host's IP address
+    network_mode: "host"
+    
+    # Environment variables
+    environment:
+      - LCD_I2C_ADDR=0x3F
+      - LCD_PI_REV=2
+      - LCD_BACKLIGHT=true
+      - UPDATE_INTERVAL=60
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; socket.gethostname()"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    
+    # Keep container running
+    tty: true
+    stdin_open: true
       
   # mjpg-streamer:
   #   restart: always
