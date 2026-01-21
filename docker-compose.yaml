@@ -31,6 +31,19 @@ services:
     networks:
       - web
 
+  # lw-comm-server:
+  #   image: lw-comm-server
+  #   container_name: lw-comm-server
+  #   privileged: true
+  #   restart: unless-stopped
+  #   ports:
+  #     - "8001:8000"
+  #   volumes:
+  #     - /dev:/dev
+  #   environment:
+  #     - TZ=Asia/Ho_Chi_Minh
+
+
   # =========================
   # LCD Display (OPTIONAL)
   # =========================

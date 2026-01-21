@@ -48,39 +48,23 @@ echo "=== 7. Installation Tailscale ==="
 curl -fsSL https://tailscale.com/install.sh | sh
 
 echo "=== 8. Installation lw.comm-server ==="
-curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
-sudo apt install -y nodejs
-sudo apt install -y \
-  python3 \
-  python-is-python3 \
-  build-essential \
-  make \
-  g++
 git clone https://github.com/LaserWeb/lw.comm-server.git
 cd lw.comm-server
-rm -rf node_modules package-lock.json
-sudo npm install serialport --unsafe-perm --build-from-source
-sudo npm install
-sudo usermod -a -G dialout root
-cat <<EOF | sudo tee /etc/systemd/system/lw.comm-server.service > /dev/null
-[Unit]
-Description=LaserWeb comm server
-After=network.target
+rm -rf Dockerfile
+cat > Dockerfile << 'EOF'
+FROM balenalib/raspberry-pi-node:16-bookworm
 
-[Service]
-Type=simple
-WorkingDirectory=/root/laserCNC/lw.comm-server
-ExecStart=/usr/bin/node server.js
-Restart=on-failure
-User=root
-Environment=NODE_ENV=production
+ADD config.js grblStrings.js firmwareFeatures.js LICENSE lw.comm-server.service package.json README.md server.js version.txt /laserweb/
+ADD app /laserweb/app/
 
-[Install]
-WantedBy=multi-user.target
+RUN cd /laserweb && npm install
+
+EXPOSE 8000
+
+ADD docker_entrypoint.sh /
+
+ENTRYPOINT ["/docker_entrypoint.sh"]
+CMD []
 EOF
-sudo systemctl daemon-reload
-sudo systemctl enable lw.comm-server
-sudo systemctl start lw.comm-server
-
 
 echo "🎉 Done! Please log out or reboot to use Docker without sudo."
