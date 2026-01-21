@@ -16,6 +16,19 @@ services:
       - "80:80"  
     networks:
       - web
+  lw-comm-server:
+    image: ./lw.comm-server   
+    container_name: lw-comm-server
+    restart: unless-stopped
+    privileged: true
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
+    volumes:
+      - /dev:/dev                 
+    ports:
+      - "8001:8000"               
+    networks:
+      - web
 
   # lcd-display:
   #   build: ./IPLaserCNC

@@ -44,6 +44,7 @@ apt autoremove
 docker compose pull
 docker compose down
 git clone https://github.com/phn1712002/LCD_HostName_IP_Display IPLaserCNC
+git clone https://github.com/LaserWeb/lw.comm-server.git
 
 echo "=== 7. Installation Tailscale ==="
 curl -fsSL https://tailscale.com/install.sh | sh
