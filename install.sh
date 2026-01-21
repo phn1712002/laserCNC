@@ -54,15 +54,29 @@ rm -rf Dockerfile
 cat > Dockerfile << 'EOF'
 FROM balenalib/raspberry-pi-node:16-bookworm
 
+# 1. Install build tools and Python (REQUIRED for node-gyp on ARM)
+RUN apt-get update && apt-get install -y \
+    python3 \
+    make \
+    g++ \
+    libudev-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# 2. Tell node-gyp to use python3
+ENV PYTHON=/usr/bin/python3
+
+# 3. Copy source files
 ADD config.js grblStrings.js firmwareFeatures.js LICENSE lw.comm-server.service package.json README.md server.js version.txt /laserweb/
 ADD app /laserweb/app/
 
-RUN cd /laserweb && npm install
+WORKDIR /laserweb
+
+# 4. Install npm dependencies
+RUN npm install
 
 EXPOSE 8000
 
 ADD docker_entrypoint.sh /
-
 ENTRYPOINT ["/docker_entrypoint.sh"]
 CMD []
 EOF

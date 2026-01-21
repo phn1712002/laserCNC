@@ -1,114 +1,80 @@
 services:
-  # =========================
-  # LaserWeb UI (Frontend)
-  # =========================
   laserweb:
     image: mkuf/laserweb:latest
     container_name: laserweb
     restart: unless-stopped
-
-    # UI chỉ là web tĩnh → KHÔNG cần privileged
     privileged: false
-
     environment:
       - TZ=Asia/Ho_Chi_Minh
-
-    # Chỉ mount config & gcode (nhẹ)
     volumes:
       - ./config:/config
       - ./gcode:/gcode
-
-    # Web UI
     ports:
       - "80:80"
-
     logging:
       driver: json-file
       options:
         max-size: "2m"
         max-file: "1"
-
     networks:
       - web
 
   # lw-comm-server:
-  #   image: lw-comm-server
+  #   build: ./lw.comm-server
   #   container_name: lw-comm-server
   #   privileged: true
   #   restart: unless-stopped
   #   ports:
-  #     - "8001:8000"
+  #     - "8081:8000"
   #   volumes:
   #     - /dev:/dev
   #   environment:
   #     - TZ=Asia/Ho_Chi_Minh
-
-
-  # =========================
-  # LCD Display (OPTIONAL)
-  # =========================
-  # lcd-display:
-  #   build: ./IPLaserCNC
-  #   container_name: lcd-hostname-ip
-  #   restart: unless-stopped
-  #
-  #   # CẦN BẬT khi dùng LCD + I2C
-  #   privileged: true
-  #
-  #   # I2C bus (DietPi)
-  #   devices:
-  #     - "/dev/i2c-1:/dev/i2c-1"
-  #
-  #   # Dùng host network để lấy IP thật
-  #   network_mode: "host"
-  #
-  #   environment:
-  #     - CONFIG_FILE=/app/config_board.yaml
-  #
-  #   mem_limit: 50m
-  #
   #   logging:
   #     driver: json-file
   #     options:
   #       max-size: "2m"
   #       max-file: "1"
-  #
-  #   tty: true
-  #   stdin_open: true
+  #   networks:
+  #     - web
 
-
-  # =========================
-  # MJPG Streamer (Camera)
-  # =========================
   # mjpg-streamer:
   #   image: patsoffice/mjpg-streamer
   #   container_name: mjpg-streamer
   #   restart: unless-stopped
-  #
-  #   # USB camera
   #   devices:
   #     - /dev/video0:/dev/video0
-  #
   #   ports:
-  #     - "8081:8080"
-  #
+  #     - "8082:8080"
   #   environment:
   #     - MJPEG_STREAMER_INPUT="-y -n -r 640x480 -f 15"
-  #
-  #
   #   logging:
   #     driver: json-file
   #     options:
   #       max-size: "2m"
   #       max-file: "1"
-  #
   #   networks:
   #     - web
 
-
-# =========================
-# Network
-# =========================
+  # lcd-display:
+  #   build: ./IPLaserCNC
+  #   container_name: lcd-hostname-ip
+  #   restart: unless-stopped
+  #   privileged: true
+  #   devices:
+  #     - "/dev/i2c-1:/dev/i2c-1"
+  #   network_mode: "host"
+  #   environment:
+  #     - CONFIG_FILE=/app/config_board.yaml
+  #   mem_limit: 50m
+  #   logging:
+  #     driver: json-file
+  #     options:
+  #       max-size: "2m"
+  #       max-file: "1"
+  #   tty: true
+  #   stdin_open: true
+  
 networks:
   web:
     driver: bridge
