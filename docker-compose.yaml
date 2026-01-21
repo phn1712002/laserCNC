@@ -17,7 +17,8 @@ services:
     networks:
       - web
   lw-comm-server:
-    image: ./lw.comm-server   
+    build: ./lw.comm-server
+    image: lw-comm-server
     container_name: lw-comm-server
     restart: unless-stopped
     privileged: true
