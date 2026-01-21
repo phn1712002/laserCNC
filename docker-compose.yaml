@@ -19,24 +19,24 @@ services:
     networks:
       - web
 
-  # lw-comm-server:
-  #   build: ./lw.comm-server
-  #   container_name: lw-comm-server
-  #   privileged: true
-  #   restart: unless-stopped
-  #   ports:
-  #     - "8081:8000"
-  #   volumes:
-  #     - /dev:/dev
-  #   environment:
-  #     - TZ=Asia/Ho_Chi_Minh
-  #   logging:
-  #     driver: json-file
-  #     options:
-  #       max-size: "2m"
-  #       max-file: "1"
-  #   networks:
-  #     - web
+  lw-comm-server:
+    build: ./lw.comm-server
+    container_name: lw-comm-server
+    privileged: true
+    restart: unless-stopped
+    ports:
+      - "8081:8000"
+    volumes:
+      - /dev:/dev
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
+    logging:
+      driver: json-file
+      options:
+        max-size: "2m"
+        max-file: "1"
+    networks:
+      - web
 
   # mjpg-streamer:
   #   image: patsoffice/mjpg-streamer
@@ -74,7 +74,7 @@ services:
   #       max-file: "1"
   #   tty: true
   #   stdin_open: true
-  
+
 networks:
   web:
     driver: bridge
