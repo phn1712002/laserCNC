@@ -44,9 +44,35 @@ apt autoremove
 docker compose pull
 docker compose down
 git clone https://github.com/phn1712002/LCD_HostName_IP_Display IPLaserCNC
-git clone https://github.com/LaserWeb/lw.comm-server.git
 
 echo "=== 7. Installation Tailscale ==="
 curl -fsSL https://tailscale.com/install.sh | sh
+
+echo "=== 8. Installation lw.comm-server ==="
+git clone https://github.com/LaserWeb/lw.comm-server.git
+cd lw.comm-server
+sudo npm install serialport --unsafe-perm --build-from-source
+sudo npm install
+sudo usermod -a -G dialout pi
+cat <<EOF | sudo tee /etc/systemd/system/lw.comm-server.service > /dev/null
+[Unit]
+Description=LaserWeb comm server
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/pi/lw.comm-server
+ExecStart=/usr/bin/node server.js
+Restart=on-failure
+User=pi
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target
+EOF
+sudo systemctl daemon-reload
+sudo systemctl enable lw.comm-server
+sudo systemctl start lw.comm-server
+
 
 echo "🎉 Done! Please log out or reboot to use Docker without sudo."

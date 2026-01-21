@@ -31,41 +31,6 @@ services:
     networks:
       - web
 
-
-  # =========================
-  # LaserWeb Comm Server (Backend)
-  # =========================
-  lw-comm-server:
-    build: ./lw.comm-server
-    image: lw-comm-server
-    container_name: lw-comm-server
-    restart: unless-stopped
-
-    # Comm server cần USB serial
-    privileged: true
-
-    environment:
-      - TZ=Asia/Ho_Chi_Minh
-
-    # Map USB cho GRBL / CNC
-    volumes:
-      - /dev:/dev
-
-    # Comm server port
-    # Host:8001 → Container:8000
-    ports:
-      - "8001:8000"
-
-    logging:
-      driver: json-file
-      options:
-        max-size: "2m"
-        max-file: "1"
-
-    networks:
-      - web
-
-
   # =========================
   # LCD Display (OPTIONAL)
   # =========================
