@@ -3,12 +3,13 @@ services:
     image: mkuf/laserweb:latest
     container_name: laserweb
     restart: unless-stopped
-    privileged: false
+    privileged: true
     environment:
       - TZ=Asia/Ho_Chi_Minh
     volumes:
       - ./config:/config
       - ./gcode:/gcode
+      - /dev:/dev
     ports:
       - "80:80"
     logging:
