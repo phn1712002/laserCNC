@@ -22,14 +22,11 @@ services:
     ports:
       - "80:80"
 
-    # Giới hạn tài nguyên (DietPi rất hợp)
-    mem_limit: 150m
-
     logging:
       driver: json-file
       options:
-        max-size: "3m"
-        max-file: "2"
+        max-size: "2m"
+        max-file: "1"
 
     networks:
       - web
@@ -59,13 +56,11 @@ services:
     ports:
       - "8001:8000"
 
-    mem_limit: 200m
-
     logging:
       driver: json-file
       options:
-        max-size: "5m"
-        max-file: "2"
+        max-size: "2m"
+        max-file: "1"
 
     networks:
       - web
@@ -122,13 +117,12 @@ services:
   #   environment:
   #     - MJPEG_STREAMER_INPUT="-y -n -r 640x480 -f 15"
   #
-  #   mem_limit: 80m
   #
   #   logging:
   #     driver: json-file
   #     options:
-  #       max-size: "3m"
-  #       max-file: "2"
+  #       max-size: "2m"
+  #       max-file: "1"
   #
   #   networks:
   #     - web
