@@ -17,7 +17,6 @@ echo "👉 Executing user: $REAL_USER"
 echo "=== 1. Updating and installing DietPi system ==="
 dietpi-update
 dietpi-software install 17
-dietpi-software install 9
 apt install nano -y
 
 echo "=== 2. Installing Docker (with Docker Compose) via dietpi-software ==="
@@ -50,11 +49,20 @@ echo "=== 7. Installation Tailscale ==="
 curl -fsSL https://tailscale.com/install.sh | sh
 
 echo "=== 8. Installation lw.comm-server ==="
+curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+sudo apt install -y nodejs
+sudo apt install -y \
+  python3 \
+  python-is-python3 \
+  build-essential \
+  make \
+  g++
 git clone https://github.com/LaserWeb/lw.comm-server.git
 cd lw.comm-server
+rm -rf node_modules package-lock.json
 sudo npm install serialport --unsafe-perm --build-from-source
 sudo npm install
-sudo usermod -a -G dialout pi
+sudo usermod -a -G dialout root
 cat <<EOF | sudo tee /etc/systemd/system/lw.comm-server.service > /dev/null
 [Unit]
 Description=LaserWeb comm server
@@ -62,10 +70,10 @@ After=network.target
 
 [Service]
 Type=simple
-WorkingDirectory=/home/pi/lw.comm-server
+WorkingDirectory=/root/laserCNC/lw.comm-server
 ExecStart=/usr/bin/node server.js
 Restart=on-failure
-User=pi
+User=root
 Environment=NODE_ENV=production
 
 [Install]
