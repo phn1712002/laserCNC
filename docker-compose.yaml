@@ -40,20 +40,13 @@ services:
       - web
 
   # mjpg-streamer:
-  #   image: patsoffice/mjpg-streamer
-  #   container_name: mjpg-streamer
-  #   restart: unless-stopped
-  #   devices:
-  #     - /dev/video0:/dev/video0
-  #   ports:
-  #     - "8082:8080"
-  #   environment:
-  #     - MJPEG_STREAMER_INPUT="-y -n -r 640x480 -f 15"
-  #   logging:
-  #     driver: json-file
-  #     options:
-  #       max-size: "2m"
-  #       max-file: "1"
+  #    image: registry.gitlab.com/luckyturtledev/docker-mjpg-streamer:latest
+  #    ports:
+  #         - '8082:8080'
+  #    command: -i "input_uvc.so -n -d /dev/video0 -r 640x480 -f 15" -o "output_http.so -w  /usr/share/mjpg-streamer/www/"
+  #    devices:
+  #         - /dev/video0
+  #    restart: unless-stopped
   #   networks:
   #     - web
 
